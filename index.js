@@ -1,10 +1,12 @@
-const express = require("express");
+const express = require("express")
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require('dotenv').config()
 const cors = require("cors");
 const app = express();
 
 const port = process.env.PORT || 5000;
+
+//https://contact-book-server.vercel.app
 
 //  middleware
 app.use(cors());
@@ -25,7 +27,7 @@ const client = new MongoClient(uri, {
 async function run() {
    try {
       // Connect the client to the server	(optional starting in v4.7)
-      await client.connect();
+      // await client.connect();
 
       const userCollection = client.db("contactUserDB").collection("users");
 
@@ -70,12 +72,16 @@ async function run() {
       })
 
       //delete related api
-      app.delete("/users/:id", async(req, res)=>{
+      app.delete("/users/:id", async (req, res) => {
          const id = req.params.id;
-         const query = {_id: new ObjectId(id)}
+         console.log("delete", id);
+         const query = {
+           _id: new ObjectId(id),
+         };
          const result = await userCollection.deleteOne(query);
+         console.log(result);
          res.send(result);
-      })
+       });
 
       // Send a ping to confirm a successful connection
       await client.db("admin").command({ ping: 1 });
